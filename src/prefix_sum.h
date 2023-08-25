@@ -6,3 +6,4 @@
 #include <iostream>
 
 void* compute_prefix_sum(void* a);
+void* compute_prefix_sum2(void *a);

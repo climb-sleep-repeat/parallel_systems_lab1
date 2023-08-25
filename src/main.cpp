@@ -23,7 +23,9 @@ int main(int argc, char **argv)
     }
 
     // Setup threads
-    pthread_t *threads = sequential ? NULL : alloc_threads(opts.n_threads);;
+    pthread_t *threads = sequential ? NULL : alloc_threads(opts.n_threads); 
+    pthread_barrierattr_t attr;
+    pthread_barrier_init(&barrier, &attr, opts.n_threads);
 
     // Setup args & read input data
     prefix_sum_args_t *ps_args = alloc_args(opts.n_threads);
