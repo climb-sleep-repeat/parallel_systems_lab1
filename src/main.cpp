@@ -7,9 +7,9 @@
 #include "operators.h"
 #include "helpers.h"
 #include "prefix_sum.h"
-
+#include <pthread.h>
+#include "spin_barrier.h"
 using namespace std;
-
 int main(int argc, char **argv)
 {
     // Parse args
@@ -48,6 +48,7 @@ int main(int argc, char **argv)
         for (int i = 1; i < n_vals; ++i) {
             //y_i = y_{i-1}  <op>  x_i
             output_vals[i] = scan_operator(output_vals[i-1], input_vals[i], ps_args->n_loops);
+
         }
     }
     else {
