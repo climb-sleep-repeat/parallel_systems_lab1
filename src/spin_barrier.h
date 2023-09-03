@@ -16,8 +16,8 @@ private:
   int m_num_threads;
   int m_counter;
   int m_go;
-  static int counter;
-  static int * go;
+  volatile static atomic<int> counter;
+  volatile static int go;
 
 };
 
