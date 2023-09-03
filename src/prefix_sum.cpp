@@ -3,11 +3,9 @@
 #include <math.h>
 #include <pthread.h>
 #include <cstring>
-extern pthread_barrier_t pb;
-using namespace std;
-pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
+using namespace std;
+extern pthread_barrier_t pb;
 void* compute_prefix_sum(void *a)
 {
     prefix_sum_args_t *args = (prefix_sum_args_t *)a;
@@ -15,7 +13,7 @@ void* compute_prefix_sum(void *a)
     int size = args->n_vals/args->n_threads;
     int start = args->t_id*size;
     int end = start+size;
-
+    
     if(start > 0)
         args->output_vals[start] = args->input_vals[start] + args->input_vals[start-1];
     else
@@ -23,18 +21,26 @@ void* compute_prefix_sum(void *a)
     for (int i = start+1;i<end;i++){
         args->output_vals[i]= args->op(args->input_vals[i-1],args->input_vals[i], args->n_loops);
     }
-    static int output_vals =0 ;
  
     for(int stride = 2; stride<args->n_vals; stride<<=1){
-        sb.wait();
+        //wait until everyone is here then copy the ouput back to the input
+        sb.wait(args->t_id);
+        // pthread_barrier_wait(&pb);
+        memcpy(&args->input_vals[start], &args->output_vals[start], (end-start)*sizeof(int));
+        sb.wait(args->t_id);
+        // pthread_barrier_wait(&pb);
+        //recalculate the size/start/end for the current interation
         size = (args->n_vals-stride)/args->n_threads;
         start = stride + args->t_id*size;
         end = start + size;
-        int num_loops = args->n_loops;
+        //if there's a remainder, tack it on to the end of the last thread
+        if(args->t_id==(args->n_threads-1))
+            end+=((args->n_vals-stride)%args->n_threads);
+        //cout << "start: " << start << " size: " << size << " stride: " << stride << " end: " << end << endl;
         for(int j = start; j<end; j++){
-            //pthread_mutex_lock(mutex1)
-            output_vals = args->op(1,2, num_loops);
+            args->output_vals[j]=args->op(args->input_vals[j], args->input_vals[j-stride], args->n_loops);
+            //args->output_vals[j]=args->input_vals[j] + args->input_vals[j-stride];
         }
     }
-    return (void *)&output_vals;
+    return 0;
 }

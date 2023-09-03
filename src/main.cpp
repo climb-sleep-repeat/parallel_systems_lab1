@@ -35,10 +35,11 @@ int main(int argc, char **argv)
     int (*scan_operator)(int, int, int);
     scan_operator = op;
     //scan_operator = add;
-
+    pthread_mutex_t * mutexes= new pthread_mutex_t[n_vals];
     fill_args(ps_args, opts.n_threads, n_vals, input_vals, output_vals,
-        opts.spin, scan_operator, opts.n_loops);
-
+        opts.spin, scan_operator, opts.n_loops, mutexes);
+    spin_barrier sb = spin_barrier(opts.n_threads);
+    sb.setup();
     // Start timer
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -48,7 +49,6 @@ int main(int argc, char **argv)
         for (int i = 1; i < n_vals; ++i) {
             //y_i = y_{i-1}  <op>  x_i
             output_vals[i] = scan_operator(output_vals[i-1], input_vals[i], ps_args->n_loops);
-
         }
     }
     else {

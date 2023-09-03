@@ -10,13 +10,14 @@ using namespace std;
 class spin_barrier {
 public:
   spin_barrier(int num_threads);
-  void wait();
+  void wait(int id);
+  void setup();
 private:  
   int m_num_threads;
   int m_counter;
   int m_go;
   static int counter;
-  static int go;
+  static int * go;
 
 };
 
