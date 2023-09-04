@@ -17,8 +17,8 @@ public:
 private:  
   int m_num_threads;
   static atomic<int> counter;
-  static sem_t arrival_sem;
-  static sem_t departure_sem;
+  static sem_t * arrival_sem;
+  static sem_t * departure_sem;
 };
 
 

@@ -5,7 +5,6 @@
 #include <cstring>
 
 using namespace std;
-extern pthread_barrier_t pb;
 void* compute_prefix_sum(void *a)
 {
     prefix_sum_args_t *args = (prefix_sum_args_t *)a;
