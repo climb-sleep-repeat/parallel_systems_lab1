@@ -1,7 +1,7 @@
 #include <spin_barrier.h>
 #include <cstring>
 #include <pthread.h>
-
+#include <fcntl.h>
 /************************
  * Your code here...    *
  * or wherever you like *
