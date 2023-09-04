@@ -5,20 +5,21 @@
 #include <iostream>
 #include <helpers.h>
 #include <atomic>
+#include <semaphore.h>
+
 using namespace std;
 
 class spin_barrier {
 public:
-  spin_barrier(int num_threads);
+  spin_barrier(int num_threads) : m_num_threads(num_threads){}
   void wait(int id);
-  void setup();
+  static void setup();
 private:  
   int m_num_threads;
   int m_counter;
-  int m_go;
-  volatile static atomic<int> counter;
-  volatile static int go;
-
+  static atomic<int> counter;
+  static sem_t arrival_sem;
+  static sem_t departure_sem;
 };
 
 

@@ -38,8 +38,8 @@ int main(int argc, char **argv)
     pthread_mutex_t * mutexes= new pthread_mutex_t[n_vals];
     fill_args(ps_args, opts.n_threads, n_vals, input_vals, output_vals,
         opts.spin, scan_operator, opts.n_loops, mutexes);
-    // spin_barrier sb = spin_barrier(opts.n_threads);
-    // sb.setup();
+    //spin_barrier sb = spin_barrier(opts.n_threads);
+    spin_barrier::setup();
     // Start timer
     auto start = std::chrono::high_resolution_clock::now();
 
