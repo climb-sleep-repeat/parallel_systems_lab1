@@ -16,7 +16,6 @@ public:
   static void setup();
 private:  
   int m_num_threads;
-  int m_counter;
   static atomic<int> counter;
   static sem_t arrival_sem;
   static sem_t departure_sem;

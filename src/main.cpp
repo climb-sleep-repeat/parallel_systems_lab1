@@ -9,7 +9,6 @@
 #include "prefix_sum.h"
 #include <pthread.h>
 #include "spin_barrier.h"
-pthread_barrier_t pb;
 using namespace std;
 int main(int argc, char **argv)
 {
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
     int n_vals;
     int *input_vals, *output_vals;
     read_file(&opts, &n_vals, &input_vals, &output_vals);
-    pthread_barrier_init(&pb, NULL, opts.n_threads);
+
     //"op" is the operator you have to use, but you can use "add" to test
     int (*scan_operator)(int, int, int);
     scan_operator = op;
